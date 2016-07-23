@@ -296,7 +296,9 @@
 			        font_container:$('.font-container'),
 			        bk_container:$('#bk-container'),
 			        night_day:$('#night-day'),
-			        font_night:$('#font_night')
+			        font_night:$('#font_night'),
+			        change_icon:$("#night-day .tubiao"),
+			        change_text:$("#night-day .wenzi")
 			        
 			    }
 			    var Win = $(window);
@@ -353,11 +355,9 @@
 					}
 		    	if (bkCurColor) {
 							$('body').css('background-color', bkCurColor);
-					  	}
+				}
 			    if (bkCurColor == "#0f1410"){
-			          $("#night-day .tubiao").removeClass('night').addClass('day');
-			          $("#night-day .wenzi").text("白天"); 
-			          
+			          show_day();		          
 			    }
 			   
 			   }
@@ -368,8 +368,8 @@
 			        var Chapter_id;
 			        var ChapterTotal;  //存总共的章节数
 			        var init = function(UIcallback){
-			          /*  getFictionInfo(function(){  //获得章节信息 然后传一个回调进来
-			                getCurChapterContent(Chapter_id,function(data){
+			          /*  getFictionInfo(function(){  //先从chapter.json拿章节ID 
+			                getCurChapterContent(Chapter_id,function(data){ //然后根据ID去data.json系列拿内容
 			                    //TODO...
 			                    UIcallback && UIcallback(data);
 			                });
@@ -496,6 +496,16 @@
 			        }
 			    }
 
+			    function show_day(){
+			    	Dom.change_icon.removeClass('night').addClass('day');
+			        Dom.change_text.text("白天");  //html()也可以喔
+
+			    }
+
+			    function show_night(){
+			    	Dom.change_icon.removeClass('day').addClass('night');
+			        Dom.change_text.text("夜间"); 
+			    }
 
 				 //todo 交互的事件绑定		    
 			    function EventHanlder(){
@@ -506,15 +516,13 @@
 			        //tap在PC端必须打开模拟器才能响应
 			        Dom.night_day.click(function(){
 			            if($("#night-day .wenzi").text()=="夜间"){
-			                $("#night-day .tubiao").removeClass('night').addClass('day');
-			                $("#night-day .wenzi").text("白天");   //html()也可以喔
+			                show_day();
 			                $('body').css('background-color', '#0f1410');
 			                $('.bk-container>div').hide();
 			                $('#font_night>.bk-container-current').show();
 			                Util.StorageSetter('background_color','#0f1410');
 			            }else{
-			                $("#night-day .tubiao").removeClass('day').addClass('night');
-			                $("#night-day .wenzi").text("夜间"); 
+			                show_night();
 			                $('body').css('background-color', '#e9dfc7');
 			                $('.bk-container>div').hide();
 			                $('#font_normal>.bk-container-current').show();
@@ -546,11 +554,9 @@
 			         Dom.bk_container.delegate('.bk-container','click',function(){
 			             var color = $(this).data('color');
 			             if(color == "#0f1410"){
-			             	$("#night-day .wenzi").text("白天"); 
-			             	$("#night-day .tubiao").removeClass('night').addClass('day');
+			             	show_day();
 			             }else{
-			             	$("#night-day .wenzi").text("夜间"); 
-			             	$("#night-day .tubiao").removeClass('day').addClass('night');
+			             	show_night();
 			             }
 			             var font = $(this).data('font');
 			             Dom.bk_container.find('.bk-container-current').hide();
