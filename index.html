@@ -391,6 +391,9 @@
 			           //TODO ...先获得章节的翻页数据->把数据拿来做渲染
 			           readerModel.prevChapter(function(data){
 			               readerUI(data);
+			               document.body.scrollTop=0;
+			               // $('window').scrollTop(0);
+			               // $('body').scrollTop(0); //三种返回顶部的写法
 			           });
 			           //readerModel.prevChapter();
 			       });
@@ -399,6 +402,7 @@
 			           //TODO ...先获得章节的翻页数据
 				        readerModel.nextChapter(function(data){
 				            readerUI(data);
+				            document.body.scrollTop=0;
 				        });
 			           //readerModel.nextChapter();
 			       });
