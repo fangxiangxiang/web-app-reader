@@ -62,8 +62,8 @@
 		<script src="js/jquery.jsonp.js"></script>
 
 		<script>
-			(function(){    /*生成一个闭包*/
-		    'use strict'   //在闭包的最开始做一个声明
+			(function(){   /*生成一个闭包*/
+		    'use strict'  //要使用es6必须在闭包的最开始做一个声明
 			    var Util =(function(){  //内部类
 			        var prefix = 'html5_reader_';
 			        var StorageGetter = function(key){
@@ -171,12 +171,18 @@
 			        var Chapter_id;
 			        var ChapterTotal;  //存总共的章节数
 			        var init = function(UIcallback){
-			            getFictionInfo(function(){  //先从chapter.json拿章节ID(Chapter_id)传到下面
+			            /*getFictionInfo(function(){  //先从chapter.json拿章节ID(Chapter_id)传到下面
 			                getCurChapterContent(Chapter_id,function(data){ //然后接收ID去data.json系列拿内容
 			                    //TODO...
 			                    UIcallback && UIcallback(data);
 			                });
-			            }) 
+			            })*/ 
+			            getFictionInfoPromise().then(function(d){
+			            	return getCurChapterContentPromise();  //注意加括号和不加括号的区别
+			            }).then(function(data){   //function(data)等同下面resolve(data)
+			            	UIcallback && UIcallback(data);
+			            })
+
 			        }
 			       var getFictionInfo = function(callback){  //如果数据没有回调 那数据传给谁呢
 			            $.get('data/chapter.json',function(data){
@@ -189,7 +195,25 @@
 			                callback && callback();
 			            },'json');
 			        }
-
+			        //var getFictionInfoPromise = new Promise(function(resolve,reject){
+			        //注意上下直接的区别 下面是调用的时候创建 上面是直接执行里面的内容
+			        var getFictionInfoPromise = function(){
+			        	return new Promise(function(resolve,reject){  //返回Promise实例对象
+				        $.get('data/chapter.json',function(data){
+			        		if(data.result == 0){
+				        		Chapter_id = Util.StorageGetter('last_chapter_id');
+				        		if (Chapter_id == null) {
+				        			Chapter_id = data.chapters[1].chapter_id;
+				        		}
+				        		ChapterTotal = data.chapters.length;
+				        		//callback && callback();
+				        		resolve();
+				        	}else{
+			        			reject({msg:'fail'}); //失败可以自定义内容
+			        		}	
+				        },'json');				        		
+			        	});
+			        }
 			        var getCurChapterContent = function(chapter_id,callback){
 			            $.get('data/data' + chapter_id +'.json',function(data){
 			                if(data.result == 0){
@@ -199,6 +223,21 @@
 			                    });
 			                }
 			            },'json')
+			        }
+			        var getCurChapterContentPromise = function(){
+				        return new Promise(function(resolve,reject){
+				        	$.get('data/data' + Chapter_id +'.json',function(data){
+				        		if(data.result == 0){
+				        			var url = data.jsonp;
+				        			Util.getBSONP(url,function(data){
+				        				//callback && callback(data);
+				        				resolve(data); //代替callback函数
+				        			})
+				        		}else{
+				        			reject();
+				        		}
+				        	},'json')
+				        });
 			        }
 
 			        var gotoChapter = function(chapter_id,UIcallback){
