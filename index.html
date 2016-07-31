@@ -166,7 +166,6 @@
 			   
 			   }
 
-
 				//todo 实现和阅读器相关的数据交互的方法(跟服务器相关的)			    
 			    function ReaderModel(){			        
 			        var Chapter_id;
@@ -247,17 +246,28 @@
 					};
 			        var prevChapter = function(UIcallback){   //写完函数再写回调
 			            Chapter_id = parseInt(Chapter_id,10);//因为Chapter_id是内部的全局变量 所以没必要当传参
-			            if(Chapter_id == 0){
-			                return;        //不能上翻
+			            if(Chapter_id == 1){
+			            	RootContainer.toolTip({
+			            		msg:"当前为第一章",
+			            		arrow:false,
+			            		css:{"z-index":"999","text-align":"center"}
+			            	});
+			                return; //不能上翻
 			            }
 			            Chapter_id -= 1;
 			            //getCurChapterContent(Chapter_id,UIcallback);
 			            gotoChapter(Chapter_id,UIcallback);
-			            Util.StorageSetter('last_chapter_id',Chapter_id);
+			            Util.StorageSetter('last_chapter_id',Chapter_id);			            
 			        }
 			         var nextChapter = function(UIcallback){
 			            Chapter_id = parseInt(Chapter_id,10);
-			            if(Chapter_id == ChapterTotal){
+			            //if(Chapter_id == ChapterTotal){
+			            if(Chapter_id >= 4){
+			            	RootContainer.toolTip({
+			            		msg:"当前为最后一章",
+			            		arrow:false,
+			            		css:{"z-index":"999","text-align":"center"}
+			            	});
 			                return;
 			            }
 			            Chapter_id += 1;
@@ -290,7 +300,7 @@
 
 			    function show_day(){
 			    	Dom.change_icon.removeClass('night').addClass('day');
-			        Dom.change_text.text("白天");  //html()也可以
+			        Dom.change_text.text("白天");  //html()也可以喔
 
 			    }
 
@@ -396,7 +406,6 @@
 			               // $('window').scrollTop(0);
 			               // $('body').scrollTop(0); //三种返回顶部的写法
 			           });
-			           //readerModel.prevChapter();
 			       });
 			       
 			       $('#next_button').click(function(){
@@ -405,7 +414,6 @@
 				            readerUI(data);
 				            document.body.scrollTop=0;
 				        });
-			           //readerModel.nextChapter();
 			       });
 			            
 			    }
