@@ -12,7 +12,7 @@
             arrow:true
         };
         typeof option=="object"&&$.extend(defaults,option);
-        $(".toolTip_error_msg").size()==0&&$("body").append('<div class="toolTip_error_msg"><p>错误提示</p></div>');
+        $(".toolTip_error_msg").size()==0&&$("body").append('<div class="toolTip_error_msg"><div class="arrow"></div><p>错误提示</p></div>');
         var tip=$(".toolTip_error_msg");
         defaults.arrow?tip.find(".arrow").removeClass("hide"):tip.find(".arrow").addClass("hide");
         tip.css({"top":w.scrollTop()+w.height()*0.8+"px","visibility":"hidden","max-width":"80%"}).find("p").html(defaults.msg);
@@ -23,3 +23,9 @@
         },defaults.delay);
     };
 })($);
+
+/*var showError=function(msg){
+    $.fn.toolTip({
+        msg:msg,arrow:false,css:{"z-index":"1004","text-align":"center"}
+    });
+};*/
