@@ -113,7 +113,7 @@
 			    var initFontSize = Util.StorageGetter('font_size');
 			    initFontSize = parseInt(initFontSize);
 			    if(!initFontSize){
-			        initFontSize = 14;
+			        initFontSize = 16;
 			    }
 			    RootContainer.css('font_size',initFontSize);
 			    
@@ -372,7 +372,7 @@
 			         });
 			         
 			         $('#large-font').click(function(){
-			             if(initFontSize>20){
+			             if(initFontSize>21){
 			                 return;
 			             }
 			             initFontSize += 1;
@@ -381,7 +381,7 @@
 			           }); 
 			           
 			          $('#small-font').click(function(){
-			              if(initFontSize<12){
+			              if(initFontSize<15){
 			                  return;
 			              }
 			             initFontSize -= 1;
